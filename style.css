@@ -1,0 +1,119 @@
+/* Custom CSS for StyleShack */
+
+/* Background image for the body */
+body {
+  background-image: url('closet.jpeg'); /* Replace with your image path or URL */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+/* Ensure the background image doesn't interfere with readability */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* Dark overlay for better text contrast */
+  z-index: -1;
+}
+
+/* Custom header styling */
+h1 {
+  color: #ffffff; /* White text for better contrast */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  letter-spacing: 1px;
+}
+
+/* Subtitle styling */
+p.text-center.text-gray-600 {
+  color: #ffffff; /* White text for better contrast */
+  font-style: italic;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Form container styling (light pink background) */
+.max-w-md.mx-auto.bg-white {
+  background-color: #fce4ec; /* Light pink */
+  border: 1px solid #f3c1cf;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.max-w-md.mx-auto.bg-white:hover {
+  transform: translateY(-5px);
+}
+
+/* Input fields */
+input[type="text"],
+input[type="url"],
+input[type="file"] {
+  border-color: #cbd5e0;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="url"]:focus,
+input[type="file"]:focus {
+  border-color: #f687b3; /* Pinkish border on focus */
+  box-shadow: 0 0 0 3px rgba(246, 135, 179, 0.2);
+}
+
+/* Custom button styling */
+button.bg-blue-500 {
+  background: linear-gradient(to right, #f687b3, #ed64a6); /* Pink gradient */
+  border: none;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button.bg-blue-500:hover {
+  background: linear-gradient(to right, #ed64a6, #d53f8c); /* Darker pink gradient on hover */
+  transform: scale(1.05);
+}
+
+/* Wardrobe card styling */
+.bg-white.p-4.rounded-lg.shadow-md {
+  background-color: #fefcbf; /* Light yellow to match wardrobe aesthetic */
+  border: 1px solid #f6e05e;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bg-white.p-4.rounded-lg.shadow-md:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Image styling */
+img.w-full.h-48 {
+  border: 2px solid #fefcbf; /* Match wardrobe card color */
+  transition: border-color 0.3s ease;
+}
+
+img.w-full.h-48:hover {
+  border-color: #f687b3; /* Pink border on hover */
+}
+
+/* Delete button styling */
+button.text-red-500 {
+  transition: color 0.2s ease;
+}
+
+button.text-red-500:hover {
+  color: #e53e3e;
+}
+
+/* Link styling */
+a.text-blue-500 {
+  color: #f687b3; /* Pink link color */
+  transition: color 0.2s ease;
+}
+
+a.text-blue-500:hover {
+  color: #ed64a6; /* Darker pink on hover */
+}

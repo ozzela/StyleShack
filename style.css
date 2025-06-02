@@ -1,45 +1,22 @@
 /* Custom CSS for StyleShack */
 
-/* Background image for the body */
-body {
-  background-image: url('background.jpg'); /* Replace with your image path or URL */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  font-family: 'Inter', sans-serif;
-  min-height: 100vh;
-}
-
-/* Ensure the background image doesn't interfere with readability */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.3); /* Dark overlay for better text contrast */
-  z-index: -1;
-}
-
 /* Custom header styling */
 h1 {
-  color: #ffffff; /* White text for better contrast */
+  color: #ffffff; /* White text for contrast */
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   letter-spacing: 1px;
 }
 
 /* Subtitle styling */
-p.text-center.text-gray-600 {
-  color: #ffffff; /* White text for better contrast */
+p.text-center {
+  color: #ffffff; /* White text for contrast */
   font-style: italic;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* Form container styling (light pink background) */
 .max-w-md.mx-auto.bg-white {
-  background-color: #fce4ec; /* Light pink */
+  background-color: #fce4ec;
   border: 1px solid #f3c1cf;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
@@ -60,20 +37,21 @@ input[type="file"] {
 input[type="text"]:focus,
 input[type="url"]:focus,
 input[type="file"]:focus {
-  border-color: #f687b3; /* Pinkish border on focus */
-  box-shadow: 0 0 0 3px rgba(246, 135, 179, 0.2);
+  border-color: #ff99c2;
+  box-shadow: 0 0 0 3px rgba(255, 153, 194, 0.2);
 }
 
-/* Custom button styling */
-button.bg-blue-500 {
-  background: linear-gradient(to right, #f687b3, #ed64a6); /* Pink gradient */
+/* Custom button styling to override Tailwind colors */
+button {
+  background: #ff99c2 !important; /* Solid #ff99c2 */
   border: none;
   font-weight: 600;
   transition: background 0.3s ease, transform 0.2s ease;
+  color: white !important; /* Ensure text is visible */
 }
 
-button.bg-blue-500:hover {
-  background: linear-gradient(to right, #ed64a6, #d53f8c); /* Darker pink gradient on hover */
+button:hover {
+  background: #e66eb3 !important; /* Darker shade for hover */
   transform: scale(1.05);
 }
 
@@ -96,38 +74,58 @@ img.w-full.h-48 {
 }
 
 img.w-full.h-48:hover {
-  border-color: #f687b3; /* Pink border on hover */
+  border-color: #ff99c2; /* Pink border on hover */
 }
 
 /* Delete button styling */
 button.text-red-500 {
+  background: none;
+  color: #f56565;
   transition: color 0.2s ease;
 }
 
 button.text-red-500:hover {
+  background: none;
   color: #e53e3e;
+}
+
+/* Favorite button styling */
+.favorite-btn {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  background: none;
+  border: none;
+  color: #ff99c2;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.favorite-btn.favorited {
+  color: #e66eb3;
 }
 
 /* Link styling */
 a.text-blue-500 {
-  color: #f687b3; /* Pink link color */
+  color: #ff99c2; /* Pink link color */
   transition: color 0.2s ease;
 }
 
 a.text-blue-500:hover {
-  color: #ed64a6; /* Darker pink on hover */
+  color: #e66eb3; /* Darker pink on hover */
 }
 
 /* Filter dropdown styling */
 select#filterCategory {
-  background: linear-gradient(to right, #f687b3, #ed64a6);
+  background: #ff99c2;
   color: white;
   font-weight: 600;
   transition: background 0.3s ease;
 }
 
 select#filterCategory:hover {
-  background: linear-gradient(to right, #ed64a6, #d53f8c);
+  background: #e66eb3;
 }
 
 /* Category dropdown in form */
@@ -136,8 +134,8 @@ select#itemCategory {
 }
 
 select#itemCategory:focus {
-  border-color: #f687b3;
-  box-shadow: 0 0 0 3px rgba(246, 135, 179, 0.2);
+  border-color: #ff99c2;
+  box-shadow: 0 0 0 3px rgba(255, 153, 194, 0.2);
 }
 
 /* Category text in wardrobe items */
@@ -145,134 +143,71 @@ p.text-gray-500 {
   color: #4a5568;
 }
 
-/* Clear wardrobe button */
-button#clearWardrobe {
-  background: linear-gradient(to right, #fc8181, #f56565);
-  border: none;
-  font-weight: 600;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-
-button#clearWardrobe:hover {
-  background: linear-gradient(to right, #f56565, #e53e3e);
-  transform: scale(1.05);
-}
-
 /* Dark mode styles */
-.dark-mode {
-  background-image: url('background.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+body.dark-mode {
+  background-color: #1a202c; /* Dark gray for dark mode */
 }
 
-.dark-mode::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7); /* Darker overlay for dark mode */
-  z-index: -1;
-}
-
-.dark-mode h1,
-.dark-mode p.text-center.text-gray-600 {
+body.dark-mode h1,
+body.dark-mode p.text-center {
   color: #e2e8f0; /* Light gray for better contrast */
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
-.dark-mode .max-w-md.mx-auto.bg-white {
+body.dark-mode .max-w-md.mx-auto.bg-white {
   background-color: #f9a8d4; /* Slightly darker pink */
   border: 1px solid #f472b6;
 }
 
-.dark-mode .bg-white.p-4.rounded-lg.shadow-md {
-  background-color: #fefcbf; /* Keep the light yellow for wardrobe cards */
-  border: 1px solid #f6e05e;
+body.dark-mode .bg-white.p-4.rounded-lg.shadow-md {
+  background-color: #d1d5db; /* Gray for wardrobe cards in dark mode */
+  border: 1px solid #9ca3af;
 }
 
-.dark-mode button.bg-blue-500 {
-  background: linear-gradient(to right, #f472b6, #ec4899);
+body.dark-mode button {
+  background: #ff99c2;
 }
 
-.dark-mode button.bg-blue-500:hover {
-  background: linear-gradient(to right, #ec4899, #db2777);
+body.dark-mode button:hover {
+  background: #e66eb3;
 }
 
-.dark-mode a.text-blue-500 {
-  color: #f472b6;
+body.dark-mode button.text-red-500 {
+  background: none;
 }
 
-.dark-mode a.text-blue-500:hover {
-  color: #ec4899;
+body.dark-mode button.text-red-500:hover {
+  background: none;
 }
 
-/* Dark mode toggle button */
-button#darkModeToggle {
-  transition: background 0.3s ease;
+body.dark-mode .favorite-btn {
+  color: #ff99c2;
 }
 
-button#darkModeToggle:hover {
-  background: #e2e8f0;
+body.dark-mode .favorite-btn.favorited {
+  color: #e66eb3;
 }
 
-/* Export button */
-button#exportWardrobe {
-  background: linear-gradient(to right, #68d391, #48bb78);
-  border: none;
-  font-weight: 600;
-  transition: background 0.3s ease, transform 0.2s ease;
+body.dark-mode a.text-blue-500 {
+  color: #ff99c2;
 }
 
-button#exportWardrobe:hover {
-  background: linear-gradient(to right, #48bb78, #38a169);
-  transform: scale(1.05);
-}
-
-/* Import button */
-button#importButton {
-  background: linear-gradient(to right, #b794f4, #9f7aea);
-  border: none;
-  font-weight: 600;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-
-button#importButton:hover {
-  background: linear-gradient(to right, #9f7aea, #805ad5);
-  transform: scale(1.05);
-}
-
-.dark-mode button#exportWardrobe {
-  background: linear-gradient(to right, #48bb78, #38a169);
-}
-
-.dark-mode button#exportWardrobe:hover {
-  background: linear-gradient(to right, #38a169, #2f855a);
-}
-
-.dark-mode button#importButton {
-  background: linear-gradient(to right, #9f7aea, #805ad5);
-}
-
-.dark-mode button#importButton:hover {
-  background: linear-gradient(to right, #805ad5, #6b46c1);
+body.dark-mode a.text-blue-500:hover {
+  color: #e66eb3;
 }
 
 /* Spinner styling */
 #loadingSpinner svg {
-  color: #f687b3;
+  color: #ff99c2;
 }
 
-.dark-mode #loadingSpinner svg {
-  color: #f472b6;
+body.dark-mode #loadingSpinner svg {
+  color: #e66eb3;
 }
 
 /* Footer styling */
 footer {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 245, 0.8);
   border-top: 1px solid #e2e8f0;
 }
 
@@ -280,10 +215,10 @@ footer p {
   color: #4a5568;
 }
 
-.dark-mode footer {
+body.dark-mode footer {
   background: rgba(0, 0, 0, 0.5);
 }
 
-.dark-mode footer p {
+body.dark-mode footer p {
   color: #e2e8f0;
 }

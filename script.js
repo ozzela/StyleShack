@@ -12,18 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     wardrobe = [];
   }
 
-  // Function to estimate localStorage usage in bytes
-  function checkStorageSize() {
-    let total = 0;
-    for (let key in localStorage) {
-      if (localStorage.hasOwnProperty(key)) {
-        total += ((localStorage[key].length + key.length) * 2); // UTF-16: 2 bytes per character
-      }
-    }
-    console.log(`Current localStorage usage: ${(total / 1024).toFixed(2)} KB`);
-    return total;
-  }
-
   // Function to save wardrobe and favorites to localStorage with error handling
   function saveData(newWardrobe, newFavorites) {
     try {
@@ -33,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
       favorites = newFavorites;
     } catch (error) {
       console.error('Error saving to localStorage:', error);
-      alert('Storage limit reached! Please remove some items or use smaller images.');
+      alert('Failed to save item. Storage may be full. Consider removing items or skipping images.');
       throw error; // Stop further processing if storage fails
     }
   }
@@ -138,22 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Check storage usage before proceeding (assume 5MB limit for safety)
-    const currentStorageSize = checkStorageSize();
-    if (currentStorageSize > 4.5 * 1024 * 1024) { // Warn if over 4.5MB
-      alert('Storage is nearly full! Please remove some items or use smaller images.');
-      return;
-    }
-
     let imageUrl = '';
     if (imageInput.files && imageInput.files[0]) {
-      const file = imageInput.files[0];
-      // Check file size (limit to 500KB to be more conservative)
-      if (file.size > 500 * 1024) {
-        alert('Image is too large! Please use an image smaller than 500KB.');
-        return;
-      }
-
       spinner.classList.remove('hidden'); // Show spinner
       const reader = new FileReader();
 
@@ -171,17 +145,17 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
           console.error('Error adding item with image:', error);
           spinner.classList.add('hidden'); // Hide spinner on error
-          alert('Failed to add item. Storage may be full or image processing failed.');
+          alert('Failed to add item. Storage may be full. Consider removing items or skipping images.');
         }
       };
 
       reader.onerror = function() {
         console.error('Error reading file with FileReader');
         spinner.classList.add('hidden'); // Hide spinner on error
-        alert('Error reading the image file. Please try a different image.');
+        alert('Error reading the image file. Please try again.');
       };
 
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(imageInput.files[0]);
     } else {
       try {
         const newWardrobe = [...wardrobe, { name, url, category, image: '' }];
@@ -193,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('itemImage').value = '';
       } catch (error) {
         console.error('Error adding item without image:', error);
-        alert('Failed to add item. Storage may be full.');
+        alert('Failed to add item. Storage may be full. Consider removing items.');
       }
     }
   });

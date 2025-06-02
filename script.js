@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log('script.js loaded successfully');
 
-  // Wardrobe and favorites arrays
+  // Wardrobe, favorites, and saved outfits arrays
   let wardrobe = [];
   let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+  let savedOutfits = JSON.parse(localStorage.getItem('savedOutfits')) || [];
   try {
     const storedWardrobe = localStorage.getItem('wardrobe');
     wardrobe = storedWardrobe ? JSON.parse(storedWardrobe) : [];
@@ -12,19 +13,60 @@ document.addEventListener('DOMContentLoaded', () => {
     wardrobe = [];
   }
 
-  // Function to save wardrobe and favorites to localStorage with error handling
-  function saveData(newWardrobe, newFavorites) {
+  // Function to save wardrobe, favorites, and saved outfits to localStorage with error handling
+  function saveData(newWardrobe, newFavorites, newSavedOutfits) {
     try {
       localStorage.setItem('wardrobe', JSON.stringify(newWardrobe));
       localStorage.setItem('favorites', JSON.stringify(newFavorites));
+      localStorage.setItem('savedOutfits', JSON.stringify(newSavedOutfits));
       wardrobe = newWardrobe;
       favorites = newFavorites;
+      savedOutfits = newSavedOutfits;
     } catch (error) {
       console.error('Error saving to localStorage:', error);
       alert('Failed to save item. Storage may be full. Consider removing items or skipping images.');
       throw error; // Stop further processing if storage fails
     }
   }
+
+  // Function to fetch image from URL using a proxy to bypass CORS
+  async function fetchImageFromUrl(url) {
+    try {
+      // Using a public CORS proxy (cors-anywhere) for demo purposes
+      const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+      const response = await fetch(proxyUrl + url);
+      const text = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, 'text/html');
+      const ogImage = doc.querySelector('meta[property="og:image"]')?.content;
+      const firstImage = doc.querySelector('img')?.src;
+      let imageUrl = ogImage || firstImage || 'https://via.placeholder.com/150?text=No+Image';
+      // Ensure the image URL is absolute
+      if (imageUrl && !imageUrl.startsWith('http')) {
+        const urlObj = new URL(url);
+        imageUrl = urlObj.origin + (imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl);
+      }
+      return imageUrl;
+    } catch (error) {
+      console.error('Error fetching image from URL:', error);
+      return 'https://via.placeholder.com/150?text=No+Image';
+    }
+  }
+
+  // Live preview for URL image
+  document.getElementById('itemUrl').addEventListener('input', async (e) => {
+    const url = e.target.value.trim();
+    const previewImg = document.getElementById('urlImagePreview');
+    if (url) {
+      previewImg.classList.remove('hidden');
+      previewImg.src = 'https://via.placeholder.com/150?text=Loading...';
+      const imageUrl = await fetchImageFromUrl(url);
+      previewImg.src = imageUrl;
+    } else {
+      previewImg.classList.add('hidden');
+      previewImg.src = 'https://via.placeholder.com/150?text=Preview';
+    }
+  });
 
   // Function to display wardrobe items
   function displayWardrobe(filterCategory = 'All') {
@@ -35,9 +77,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     filteredItems.forEach((item, index) => {
       const itemDiv = document.createElement('div');
-      itemDiv.className = 'bg-white p-4 rounded-lg shadow-md relative';
+      itemDiv.className = 'bg-white p-4 rounded-lg shadow-md relative wardrobe-card';
       itemDiv.innerHTML = `
-        <img src="${item.image || 'https://via.placeholder.com/150?text=Clothing+Item'}" alt="${item.name}" class="w-full h-48 object-cover rounded-md mb-2" onerror="this.src='https://via.placeholder.com/150?text=Clothing+Item'; this.alt='Whoops, that image is still playing hide-and-seek with the internet fairies!'">
+        <div class="image-container">
+          <img src="${item.image || 'https://via.placeholder.com/150?text=Clothing+Item'}" alt="${item.name}" class="w-full h-48 object-cover rounded-md mb-2" onerror="this.src='https://via.placeholder.com/150?text=Clothing+Item'; this.alt='Whoops, that image is still playing hide-and-seek with the internet fairies!'">
+        </div>
         <h3 class="text-lg font-semibold">${item.name}</h3>
         <p class="text-sm text-gray-500">${item.category}</p>
         <a href="${item.url}" target="_blank" class="text-blue-500 hover:underline text-sm">View Product</a>
@@ -61,9 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
     favorites.forEach(index => {
       if (wardrobe[index]) {
         const itemDiv = document.createElement('div');
-        itemDiv.className = 'bg-white p-4 rounded-lg shadow-md relative';
+        itemDiv.className = 'bg-white p-4 rounded-lg shadow-md relative wardrobe-card';
         itemDiv.innerHTML = `
-          <img src="${wardrobe[index].image || 'https://via.placeholder.com/150?text=Clothing+Item'}" alt="${wardrobe[index].name}" class="w-full h-48 object-cover rounded-md mb-2">
+          <div class="image-container">
+            <img src="${wardrobe[index].image || 'https://via.placeholder.com/150?text=Clothing+Item'}" alt="${wardrobe[index].name}" class="w-full h-48 object-cover rounded-md mb-2">
+          </div>
           <h3 class="text-lg font-semibold">${wardrobe[index].name}</h3>
           <p class="text-sm text-gray-500">${wardrobe[index].category}</p>
           <a href="${wardrobe[index].url}" target="_blank" class="text-blue-500 hover:underline text-sm">View Product</a>
@@ -81,9 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
     outfit.forEach(item => {
       if (item) {
         const itemDiv = document.createElement('div');
-        itemDiv.className = 'bg-white p-4 rounded-lg shadow-md';
+        itemDiv.className = 'bg-white p-4 rounded-lg shadow-md wardrobe-card';
         itemDiv.innerHTML = `
-          <img src="${item.image || 'https://via.placeholder.com/150?text=Clothing+Item'}" alt="${item.name}" class="w-full h-48 object-cover rounded-md mb-2">
+          <div class="image-container">
+            <img src="${item.image || 'https://via.placeholder.com/150?text=Clothing+Item'}" alt="${item.name}" class="w-full h-48 object-cover rounded-md mb-2">
+          </div>
           <h3 class="text-lg font-semibold">${item.name}</h3>
           <p class="text-sm text-gray-500">${item.category}</p>
         `;
@@ -91,6 +139,34 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
     document.getElementById('generatedOutfit').classList.toggle('hidden', outfit.some(item => !item));
+  }
+
+  // Function to clear generated outfit
+  function ungenerateOutfit() {
+    document.getElementById('outfitItems').innerHTML = '';
+    document.getElementById('generatedOutfit').classList.add('hidden');
+  }
+
+  // Function to display saved outfits
+  function displaySavedOutfits() {
+    const savedOutfitsDiv = document.getElementById('savedOutfits');
+    savedOutfitsDiv.innerHTML = '';
+    savedOutfits.forEach((outfit, index) => {
+      const outfitDiv = document.createElement('div');
+      outfitDiv.className = 'bg-white p-4 rounded-lg shadow-md relative wardrobe-card';
+      outfitDiv.innerHTML = `
+        <div class="grid grid-cols-2 gap-2">
+          ${outfit.map(item => item ? `<div class="image-container"><img src="${item.image || 'https://via.placeholder.com/150?text=Clothing+Item'}" alt="${item.name}" class="w-full h-24 object-cover rounded-md mb-2"><p>${item.name}</p></div>` : '<div></div>').join('')}
+        </div>
+        <button class="mt-2 text-red-500 hover:text-red-700" onclick="deleteSavedOutfit(${index})">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      `;
+      savedOutfitsDiv.appendChild(outfitDiv);
+    });
+    document.getElementById('savedOutfitsSection').classList.toggle('hidden', savedOutfits.length === 0);
   }
 
   // Function to generate a random outfit
@@ -114,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Function to add a new item
-  document.getElementById('addItem').addEventListener('click', () => {
+  document.getElementById('addItem').addEventListener('click', async () => {
     const name = document.getElementById('itemName').value.trim();
     const url = document.getElementById('itemUrl').value.trim();
     const category = document.getElementById('itemCategory').value;
@@ -135,13 +211,14 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
           imageUrl = e.target.result;
           const newWardrobe = [...wardrobe, { name, url, category, image: imageUrl }];
-          saveData(newWardrobe, favorites);
+          saveData(newWardrobe, favorites, savedOutfits);
           displayWardrobe(document.getElementById('filterCategory').value);
           spinner.classList.add('hidden'); // Hide spinner
           // Reset form
           document.getElementById('itemName').value = '';
           document.getElementById('itemUrl').value = '';
           document.getElementById('itemImage').value = '';
+          document.getElementById('urlImagePreview').classList.add('hidden');
         } catch (error) {
           console.error('Error adding item with image:', error);
           spinner.classList.add('hidden'); // Hide spinner on error
@@ -157,17 +234,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
       reader.readAsDataURL(imageInput.files[0]);
     } else {
+      spinner.classList.remove('hidden'); // Show spinner
+      imageUrl = await fetchImageFromUrl(url);
       try {
-        const newWardrobe = [...wardrobe, { name, url, category, image: '' }];
-        saveData(newWardrobe, favorites);
+        const newWardrobe = [...wardrobe, { name, url, category, image: imageUrl }];
+        saveData(newWardrobe, favorites, savedOutfits);
         displayWardrobe(document.getElementById('filterCategory').value);
+        spinner.classList.add('hidden'); // Hide spinner
         // Reset form
         document.getElementById('itemName').value = '';
         document.getElementById('itemUrl').value = '';
         document.getElementById('itemImage').value = '';
+        document.getElementById('urlImagePreview').classList.add('hidden');
       } catch (error) {
         console.error('Error adding item without image:', error);
-        alert('Failed to add item. Storage may be full. Consider removing items.');
+        spinner.classList.add('hidden'); // Hide spinner on error
+        alert('Failed to add item. Storage may be full.');
       }
     }
   });
@@ -176,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.removeItem = function(index) {
     const newWardrobe = wardrobe.filter((_, i) => i !== index);
     const newFavorites = favorites.filter(fav => fav !== index).map(fav => fav > index ? fav - 1 : fav);
-    saveData(newWardrobe, newFavorites);
+    saveData(newWardrobe, newFavorites, savedOutfits);
     displayWardrobe(document.getElementById('filterCategory').value);
     displayFavorites();
     document.getElementById('generatedOutfit').classList.add('hidden');
@@ -191,9 +273,38 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       newFavorites.splice(favIndex, 1);
     }
-    saveData(wardrobe, newFavorites);
+    saveData(wardrobe, newFavorites, savedOutfits);
     displayWardrobe(document.getElementById('filterCategory').value);
     displayFavorites();
+  };
+
+  // Function to save outfit
+  document.getElementById('saveOutfit').addEventListener('click', () => {
+    const outfitItems = document.getElementById('outfitItems').children;
+    const outfit = Array.from(outfitItems).map(itemDiv => {
+      const img = itemDiv.querySelector('img');
+      const name = itemDiv.querySelector('h3').textContent;
+      const category = itemDiv.querySelector('p').textContent;
+      return img ? { name, category, image: img.src } : null;
+    });
+    if (!outfit.some(item => !item)) {
+      savedOutfits.push(outfit);
+      saveData(wardrobe, favorites, savedOutfits);
+      displaySavedOutfits();
+      alert('Outfit saved successfully!');
+    } else {
+      alert('No valid outfit to save. Generate an outfit first!');
+    }
+  });
+
+  // Function to ungenerate outfit
+  document.getElementById('ungenerateOutfit').addEventListener('click', ungenerateOutfit);
+
+  // Function to delete saved outfit
+  window.deleteSavedOutfit = function(index) {
+    savedOutfits.splice(index, 1);
+    saveData(wardrobe, favorites, savedOutfits);
+    displaySavedOutfits();
   };
 
   // Filter wardrobe by category
@@ -204,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Clear wardrobe
   document.getElementById('clearWardrobe').addEventListener('click', () => {
     if (confirm('Are you sure you want to clear your wardrobe?')) {
-      saveData([], []);
+      saveData([], [], savedOutfits);
       displayWardrobe(document.getElementById('filterCategory').value);
       displayFavorites();
       document.getElementById('generatedOutfit').classList.add('hidden');
@@ -213,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Export wardrobe
   document.getElementById('exportWardrobe').addEventListener('click', () => {
-    const dataStr = JSON.stringify({ wardrobe, favorites });
+    const dataStr = JSON.stringify({ wardrobe, favorites, savedOutfits });
     const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
     const exportFileDefaultName = 'wardrobe.json';
 
@@ -238,9 +349,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = JSON.parse(e.target.result);
         const newWardrobe = data.wardrobe || [];
         const newFavorites = data.favorites || [];
-        saveData(newWardrobe, newFavorites);
+        const newSavedOutfits = data.savedOutfits || [];
+        saveData(newWardrobe, newFavorites, newSavedOutfits);
         displayWardrobe(document.getElementById('filterCategory').value);
         displayFavorites();
+        displaySavedOutfits();
       } catch (err) {
         alert('Error importing wardrobe. Please ensure the file is a valid JSON.');
       }
@@ -273,4 +386,5 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial display
   displayWardrobe();
   displayFavorites();
+  displaySavedOutfits();
 });

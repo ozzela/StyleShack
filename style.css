@@ -2,130 +2,134 @@
 
 /* Custom header styling */
 h1 {
-  color: #ffffff; /* White text for contrast */
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  color: #000000; /* Black text for contrast */
   letter-spacing: 1px;
 }
 
 /* Subtitle styling */
 p.text-center {
-  color: #ffffff; /* White text for contrast */
+  color: #666666; /* Dark gray for contrast */
   font-style: italic;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Form container styling (light pink background) */
+/* Form container styling (clean white background) */
 .max-w-md.mx-auto.bg-white {
-  background-color: #fce4ec;
-  border: 1px solid #f3c1cf;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease;
 }
 
 .max-w-md.mx-auto.bg-white:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
 }
 
 /* Input fields */
 input[type="text"],
 input[type="url"],
 input[type="file"] {
-  border-color: #cbd5e0;
+  border-color: #e0e0e0;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 input[type="text"]:focus,
 input[type="url"]:focus,
 input[type="file"]:focus {
-  border-color: #ff99c2;
-  box-shadow: 0 0 0 3px rgba(255, 153, 194, 0.2);
+  border-color: #000000;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Custom button styling to override Tailwind colors */
 button {
-  background: #ff99c2 !important; /* Solid #ff99c2 */
+  background: #000000 !important; /* Black for buttons */
   border: none;
-  font-weight: 600;
+  font-weight: 500;
   transition: background 0.3s ease, transform 0.2s ease;
   color: white !important; /* Ensure text is visible */
 }
 
 button:hover {
-  background: #e66eb3 !important; /* Darker shade for hover */
+  background: #333333 !important; /* Darker shade for hover */
   transform: scale(1.05);
 }
 
-/* Wardrobe card styling */
-.bg-white.p-4.rounded-lg.shadow-md {
-  background-color: #fefcbf; /* Light yellow to match wardrobe aesthetic */
-  border: 1px solid #f6e05e;
+/* Wardrobe card styling (LTK-like) */
+.wardrobe-card {
+  background-color: #ffffff; /* Pure white background */
+  border: 1px solid #e0e0e0;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 16px;
+  border-radius: 8px;
 }
 
-.bg-white.p-4.rounded-lg.shadow-md:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+.wardrobe-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Image styling */
+.image-container {
+  overflow: hidden;
+  border-radius: 8px;
+}
+
 img.w-full.h-48 {
-  border: 2px solid #fefcbf; /* Match wardrobe card color */
-  transition: border-color 0.3s ease;
+  border: none;
+  transition: transform 0.3s ease;
 }
 
 img.w-full.h-48:hover {
-  border-color: #ff99c2; /* Pink border on hover */
+  transform: scale(1.1);
 }
 
 /* Delete button styling */
 button.text-red-500 {
   background: none;
-  color: #f56565;
+  color: #e53e3e;
   transition: color 0.2s ease;
 }
 
 button.text-red-500:hover {
   background: none;
-  color: #e53e3e;
+  color: #c53030;
 }
 
 /* Favorite button styling */
 .favorite-btn {
   position: absolute;
-  top: 2px;
-  left: 2px;
+  top: 8px;
+  left: 8px;
   background: none;
   border: none;
-  color: #ff99c2;
+  color: #000000;
   font-size: 1.5rem;
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
 .favorite-btn.favorited {
-  color: #e66eb3;
+  color: #e53e3e;
 }
 
 /* Link styling */
 a.text-blue-500 {
-  color: #ff99c2; /* Pink link color */
+  color: #000000; /* Black link color */
   transition: color 0.2s ease;
 }
 
 a.text-blue-500:hover {
-  color: #e66eb3; /* Darker pink on hover */
+  color: #666666; /* Dark gray on hover */
 }
 
 /* Filter dropdown styling */
 select#filterCategory {
-  background: #ff99c2;
+  background: #000000;
   color: white;
-  font-weight: 600;
+  font-weight: 500;
   transition: background 0.3s ease;
 }
 
 select#filterCategory:hover {
-  background: #e66eb3;
+  background: #333333;
 }
 
 /* Category dropdown in form */
@@ -134,13 +138,33 @@ select#itemCategory {
 }
 
 select#itemCategory:focus {
-  border-color: #ff99c2;
-  box-shadow: 0 0 0 3px rgba(255, 153, 194, 0.2);
+  border-color: #000000;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Category text in wardrobe items */
 p.text-gray-500 {
-  color: #4a5568;
+  color: #666666;
+}
+
+/* Saved Outfits styling */
+#savedOutfitsSection .wardrobe-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+}
+
+#savedOutfitsSection .wardrobe-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#savedOutfitsSection img.w-full.h-24 {
+  border: none;
+  transition: transform 0.3s ease;
+}
+
+#savedOutfitsSection img.w-full.h-24:hover {
+  transform: scale(1.1);
 }
 
 /* Dark mode styles */
@@ -151,25 +175,29 @@ body.dark-mode {
 body.dark-mode h1,
 body.dark-mode p.text-center {
   color: #e2e8f0; /* Light gray for better contrast */
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
 body.dark-mode .max-w-md.mx-auto.bg-white {
-  background-color: #f9a8d4; /* Slightly darker pink */
-  border: 1px solid #f472b6;
+  background-color: #2d3748;
+  border: 1px solid #4a5568;
 }
 
-body.dark-mode .bg-white.p-4.rounded-lg.shadow-md {
-  background-color: #d1d5db; /* Gray for wardrobe cards in dark mode */
-  border: 1px solid #9ca3af;
+body.dark-mode .wardrobe-card {
+  background-color: #2d3748;
+  border: 1px solid #4a5568;
+}
+
+body.dark-mode #savedOutfitsSection .wardrobe-card {
+  background-color: #2d3748;
+  border: 1px solid #4a5568;
 }
 
 body.dark-mode button {
-  background: #ff99c2;
+  background: #000000;
 }
 
 body.dark-mode button:hover {
-  background: #e66eb3;
+  background: #333333;
 }
 
 body.dark-mode button.text-red-500 {
@@ -181,38 +209,38 @@ body.dark-mode button.text-red-500:hover {
 }
 
 body.dark-mode .favorite-btn {
-  color: #ff99c2;
+  color: #ffffff;
 }
 
 body.dark-mode .favorite-btn.favorited {
-  color: #e66eb3;
+  color: #e53e3e;
 }
 
 body.dark-mode a.text-blue-500 {
-  color: #ff99c2;
+  color: #ffffff;
 }
 
 body.dark-mode a.text-blue-500:hover {
-  color: #e66eb3;
+  color: #cccccc;
 }
 
 /* Spinner styling */
 #loadingSpinner svg {
-  color: #ff99c2;
+  color: #000000;
 }
 
 body.dark-mode #loadingSpinner svg {
-  color: #e66eb3;
+  color: #ffffff;
 }
 
 /* Footer styling */
 footer {
-  background: rgba(255, 255, 245, 0.8);
+  background: rgba(255, 255, 255, 0.8);
   border-top: 1px solid #e2e8f0;
 }
 
 footer p {
-  color: #4a5568;
+  color: #666666;
 }
 
 body.dark-mode footer {

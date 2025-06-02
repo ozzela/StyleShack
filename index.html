@@ -31,9 +31,10 @@
         <div>
           <label for="itemUrl" class="block text-sm font-medium text-gray-700">Product URL</label>
           <input type="url" id="itemUrl" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2" placeholder="e.g., https://store.com/product">
+          <img id="urlImagePreview" src="https://via.placeholder.com/150?text=Preview" alt="Image Preview" class="mt-2 w-32 h-32 object-cover rounded-md hidden">
         </div>
         <div>
-          <label for="itemImage" class="block text-sm font-medium text-gray-700">Upload Image (Optional)</label>
+          <label for="itemImage" class="block text-sm font-medium text-gray-700">Upload Image (Optional, overrides URL image)</label>
           <input type="file" id="itemImage" accept="image/*" class="mt-1 p-2 w-full border rounded-md">
         </div>
         <div>
@@ -78,12 +79,22 @@
     <div id="generatedOutfit" class="mb-8 p-4 bg-white rounded-lg shadow-md hidden">
       <h2 class="text-xl font-semibold mb-4">Generated Outfit</h2>
       <div id="outfitItems" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+      <div class="mt-4 space-x-4">
+        <button id="saveOutfit" class="bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition">Save Outfit</button>
+        <button id="ungenerateOutfit" class="bg-gray-500 text-white p-2 rounded-md hover:bg-gray-600 transition">Ungenerate Outfit</button>
+      </div>
     </div>
 
     <!-- Favorites List -->
     <div id="favorites" class="mb-8 p-4 bg-white rounded-lg shadow-md hidden">
       <h2 class="text-xl font-semibold mb-4">Favorites</h2>
       <div id="favoriteItems" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+    </div>
+
+    <!-- Saved Outfits Display -->
+    <div id="savedOutfitsSection" class="mb-8 p-4 bg-white rounded-lg shadow-md hidden">
+      <h2 class="text-xl font-semibold mb-4">Saved Outfits</h2>
+      <div id="savedOutfits" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
     </div>
 
     <!-- Wardrobe Display -->

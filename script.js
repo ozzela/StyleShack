@@ -12,11 +12,25 @@ document.addEventListener('DOMContentLoaded', () => {
     wardrobe = [];
   }
 
+  // Function to estimate localStorage usage in bytes
+  function checkStorageSize() {
+    let total = 0;
+    for (let key in localStorage) {
+      if (localStorage.hasOwnProperty(key)) {
+        total += ((localStorage[key].length + key.length) * 2); // UTF-16: 2 bytes per character
+      }
+    }
+    console.log(`Current localStorage usage: ${(total / 1024).toFixed(2)} KB`);
+    return total;
+  }
+
   // Function to save wardrobe and favorites to localStorage with error handling
-  function saveData() {
+  function saveData(newWardrobe, newFavorites) {
     try {
-      localStorage.setItem('wardrobe', JSON.stringify(wardrobe));
-      localStorage.setItem('favorites', JSON.stringify(favorites));
+      localStorage.setItem('wardrobe', JSON.stringify(newWardrobe));
+      localStorage.setItem('favorites', JSON.stringify(newFavorites));
+      wardrobe = newWardrobe;
+      favorites = newFavorites;
     } catch (error) {
       console.error('Error saving to localStorage:', error);
       alert('Storage limit reached! Please remove some items or use smaller images.');
@@ -124,12 +138,19 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    // Check storage usage before proceeding (assume 5MB limit for safety)
+    const currentStorageSize = checkStorageSize();
+    if (currentStorageSize > 4.5 * 1024 * 1024) { // Warn if over 4.5MB
+      alert('Storage is nearly full! Please remove some items or use smaller images.');
+      return;
+    }
+
     let imageUrl = '';
     if (imageInput.files && imageInput.files[0]) {
       const file = imageInput.files[0];
-      // Check file size (limit to 1MB to prevent localStorage issues)
-      if (file.size > 1024 * 1024) {
-        alert('Image is too large! Please use an image smaller than 1MB.');
+      // Check file size (limit to 500KB to be more conservative)
+      if (file.size > 500 * 1024) {
+        alert('Image is too large! Please use an image smaller than 500KB.');
         return;
       }
 
@@ -139,8 +160,8 @@ document.addEventListener('DOMContentLoaded', () => {
       reader.onload = function(e) {
         try {
           imageUrl = e.target.result;
-          wardrobe.push({ name, url, category, image: imageUrl });
-          saveData();
+          const newWardrobe = [...wardrobe, { name, url, category, image: imageUrl }];
+          saveData(newWardrobe, favorites);
           displayWardrobe(document.getElementById('filterCategory').value);
           spinner.classList.add('hidden'); // Hide spinner
           // Reset form
@@ -163,8 +184,8 @@ document.addEventListener('DOMContentLoaded', () => {
       reader.readAsDataURL(file);
     } else {
       try {
-        wardrobe.push({ name, url, category, image: '' });
-        saveData();
+        const newWardrobe = [...wardrobe, { name, url, category, image: '' }];
+        saveData(newWardrobe, favorites);
         displayWardrobe(document.getElementById('filterCategory').value);
         // Reset form
         document.getElementById('itemName').value = '';
@@ -179,9 +200,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Function to remove an item
   window.removeItem = function(index) {
-    wardrobe.splice(index, 1);
-    favorites = favorites.filter(fav => fav !== index && fav > index);
-    saveData();
+    const newWardrobe = wardrobe.filter((_, i) => i !== index);
+    const newFavorites = favorites.filter(fav => fav !== index).map(fav => fav > index ? fav - 1 : fav);
+    saveData(newWardrobe, newFavorites);
     displayWardrobe(document.getElementById('filterCategory').value);
     displayFavorites();
     document.getElementById('generatedOutfit').classList.add('hidden');
@@ -190,12 +211,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Function to toggle favorite
   window.toggleFavorite = function(index) {
     const favIndex = favorites.indexOf(index);
+    let newFavorites = [...favorites];
     if (favIndex === -1) {
-      favorites.push(index);
+      newFavorites.push(index);
     } else {
-      favorites.splice(favIndex, 1);
+      newFavorites.splice(favIndex, 1);
     }
-    saveData();
+    saveData(wardrobe, newFavorites);
     displayWardrobe(document.getElementById('filterCategory').value);
     displayFavorites();
   };
@@ -208,9 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Clear wardrobe
   document.getElementById('clearWardrobe').addEventListener('click', () => {
     if (confirm('Are you sure you want to clear your wardrobe?')) {
-      wardrobe = [];
-      favorites = [];
-      saveData();
+      saveData([], []);
       displayWardrobe(document.getElementById('filterCategory').value);
       displayFavorites();
       document.getElementById('generatedOutfit').classList.add('hidden');
@@ -242,9 +262,9 @@ document.addEventListener('DOMContentLoaded', () => {
     reader.onload = function(e) {
       try {
         const data = JSON.parse(e.target.result);
-        wardrobe = data.wardrobe || [];
-        favorites = data.favorites || [];
-        saveData();
+        const newWardrobe = data.wardrobe || [];
+        const newFavorites = data.favorites || [];
+        saveData(newWardrobe, newFavorites);
         displayWardrobe(document.getElementById('filterCategory').value);
         displayFavorites();
       } catch (err) {

@@ -12,13 +12,13 @@
   <div class="container mx-auto p-4">
     <h1 class="text-3xl font-bold text-center mb-6">StyleShack</h1>
     <div class="flex justify-end mb-4">
-      <button id="darkModeToggle" class="p-2 rounded-full bg-gray-200 hover:bg-gray-300 transition">
+      <button id="darkModeToggle" class="p-2 rounded-full transition">
         <svg id="darkModeIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
         </svg>
       </button>
     </div>
-    <p class="text-center text-gray-600 mb-8">Organize and preview your clothing items to plan your outfits!</p>
+    <p class="text-center mb-8">Organize and preview your clothing items to plan your outfits!</p>
 
     <!-- Input Form -->
     <div class="max-w-md mx-auto mb-8 bg-white p-6 rounded-lg shadow-md">
@@ -26,11 +26,11 @@
       <div class="space-y-4">
         <div>
           <label for="itemName" class="block text-sm font-medium text-gray-700">Item Name</label>
-          <input type="text" id="itemName" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., Blue Jacket">
+          <input type="text" id="itemName" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2" placeholder="e.g., Blue Jacket">
         </div>
         <div>
           <label for="itemUrl" class="block text-sm font-medium text-gray-700">Product URL</label>
-          <input type="url" id="itemUrl" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., https://store.com/product">
+          <input type="url" id="itemUrl" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2" placeholder="e.g., https://store.com/product">
         </div>
         <div>
           <label for="itemImage" class="block text-sm font-medium text-gray-700">Upload Image (Optional)</label>
@@ -38,7 +38,7 @@
         </div>
         <div>
           <label for="itemCategory" class="block text-sm font-medium text-gray-700">Category</label>
-          <select id="itemCategory" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <select id="itemCategory" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2">
             <option value="Tops">Tops</option>
             <option value="Bottoms">Bottoms</option>
             <option value="Accessories">Accessories</option>
@@ -50,7 +50,7 @@
     </div>
 
     <div id="loadingSpinner" class="hidden flex justify-center mb-4">
-      <svg class="animate-spin h-8 w-8 text-pink-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <svg class="animate-spin h-8 w-8 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
       </svg>
@@ -61,16 +61,29 @@
       <button id="exportWardrobe" class="bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition">Export Wardrobe</button>
       <input type="file" id="importWardrobe" accept=".json" class="hidden">
       <button id="importButton" class="bg-purple-500 text-white p-2 rounded-md hover:bg-purple-600 transition">Import Wardrobe</button>
+      <button id="generateOutfit" class="bg-yellow-500 text-white p-2 rounded-md hover:bg-yellow-600 transition">Generate Outfit</button>
     </div>
 
     <div class="flex justify-center mb-6">
-      <select id="filterCategory" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <select id="filterCategory" class="p-2 border rounded-md focus:outline-none focus:ring-2">
         <option value="All">All Categories</option>
         <option value="Tops">Tops</option>
         <option value="Bottoms">Bottoms</option>
         <option value="Accessories">Accessories</option>
         <option value="Shoes">Shoes</option>
       </select>
+    </div>
+
+    <!-- Generated Outfit Display -->
+    <div id="generatedOutfit" class="mb-8 p-4 bg-white rounded-lg shadow-md hidden">
+      <h2 class="text-xl font-semibold mb-4">Generated Outfit</h2>
+      <div id="outfitItems" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+    </div>
+
+    <!-- Favorites List -->
+    <div id="favorites" class="mb-8 p-4 bg-white rounded-lg shadow-md hidden">
+      <h2 class="text-xl font-semibold mb-4">Favorites</h2>
+      <div id="favoriteItems" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
     </div>
 
     <!-- Wardrobe Display -->
@@ -80,7 +93,7 @@
   </div>
 
   <footer class="text-center py-4 mt-8">
-    <p class="text-gray-600">© 2025 StyleShack. Created by E.O.</p>
+    <p class="text-gray-600">© 2025 StyleShack. Created by E.O</p>
   </footer>
 
   <script src="script.js"></script>

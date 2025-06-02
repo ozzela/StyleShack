@@ -12,10 +12,16 @@ document.addEventListener('DOMContentLoaded', () => {
     wardrobe = [];
   }
 
-  // Function to save wardrobe and favorites to localStorage
+  // Function to save wardrobe and favorites to localStorage with error handling
   function saveData() {
-    localStorage.setItem('wardrobe', JSON.stringify(wardrobe));
-    localStorage.setItem('favorites', JSON.stringify(favorites));
+    try {
+      localStorage.setItem('wardrobe', JSON.stringify(wardrobe));
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+    } catch (error) {
+      console.error('Error saving to localStorage:', error);
+      alert('Storage limit reached! Please remove some items or use smaller images.');
+      throw error; // Stop further processing if storage fails
+    }
   }
 
   // Function to display wardrobe items
@@ -120,28 +126,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let imageUrl = '';
     if (imageInput.files && imageInput.files[0]) {
+      const file = imageInput.files[0];
+      // Check file size (limit to 1MB to prevent localStorage issues)
+      if (file.size > 1024 * 1024) {
+        alert('Image is too large! Please use an image smaller than 1MB.');
+        return;
+      }
+
       spinner.classList.remove('hidden'); // Show spinner
       const reader = new FileReader();
+
       reader.onload = function(e) {
-        imageUrl = e.target.result;
-        wardrobe.push({ name, url, category, image: imageUrl });
+        try {
+          imageUrl = e.target.result;
+          wardrobe.push({ name, url, category, image: imageUrl });
+          saveData();
+          displayWardrobe(document.getElementById('filterCategory').value);
+          spinner.classList.add('hidden'); // Hide spinner
+          // Reset form
+          document.getElementById('itemName').value = '';
+          document.getElementById('itemUrl').value = '';
+          document.getElementById('itemImage').value = '';
+        } catch (error) {
+          console.error('Error adding item with image:', error);
+          spinner.classList.add('hidden'); // Hide spinner on error
+          alert('Failed to add item. Storage may be full or image processing failed.');
+        }
+      };
+
+      reader.onerror = function() {
+        console.error('Error reading file with FileReader');
+        spinner.classList.add('hidden'); // Hide spinner on error
+        alert('Error reading the image file. Please try a different image.');
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      try {
+        wardrobe.push({ name, url, category, image: '' });
         saveData();
         displayWardrobe(document.getElementById('filterCategory').value);
-        spinner.classList.add('hidden'); // Hide spinner
         // Reset form
         document.getElementById('itemName').value = '';
         document.getElementById('itemUrl').value = '';
         document.getElementById('itemImage').value = '';
-      };
-      reader.readAsDataURL(imageInput.files[0]);
-    } else {
-      wardrobe.push({ name, url, category, image: '' });
-      saveData();
-      displayWardrobe(document.getElementById('filterCategory').value);
-      // Reset form
-      document.getElementById('itemName').value = '';
-      document.getElementById('itemUrl').value = '';
-      document.getElementById('itemImage').value = '';
+      } catch (error) {
+        console.error('Error adding item without image:', error);
+        alert('Failed to add item. Storage may be full.');
+      }
     }
   });
 

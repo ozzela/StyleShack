@@ -25,23 +25,20 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       console.error('Error saving to localStorage:', error);
       alert('Failed to save item. Storage may be full. Consider removing items or skipping images.');
-      throw error; // Stop further processing if storage fails
+      throw error;
     }
   }
 
-  // Function to fetch image from URL using a proxy to bypass CORS
+  // Function to fetch image from URL
   async function fetchImageFromUrl(url) {
     try {
-      // Using a public CORS proxy (cors-anywhere) for demo purposes
-      const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-      const response = await fetch(proxyUrl + url);
+      const response = await fetch(url);
       const text = await response.text();
       const parser = new DOMParser();
       const doc = parser.parseFromString(text, 'text/html');
       const ogImage = doc.querySelector('meta[property="og:image"]')?.content;
       const firstImage = doc.querySelector('img')?.src;
       let imageUrl = ogImage || firstImage || 'https://via.placeholder.com/150?text=No+Image';
-      // Ensure the image URL is absolute
       if (imageUrl && !imageUrl.startsWith('http')) {
         const urlObj = new URL(url);
         imageUrl = urlObj.origin + (imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl);
@@ -78,6 +75,11 @@ document.addEventListener('DOMContentLoaded', () => {
     filteredItems.forEach((item, index) => {
       const itemDiv = document.createElement('div');
       itemDiv.className = 'bg-white p-4 rounded-lg shadow-md relative wardrobe-card';
+      itemDiv.setAttribute('draggable', true);
+      itemDiv.setAttribute('data-index', index);
+      itemDiv.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', index);
+      });
       itemDiv.innerHTML = `
         <div class="image-container">
           <img src="${item.image || 'https://via.placeholder.com/150?text=Clothing+Item'}" alt="${item.name}" class="w-full h-48 object-cover rounded-md mb-2" onerror="this.src='https://via.placeholder.com/150?text=Clothing+Item'; this.alt='Whoops, that image is still playing hide-and-seek with the internet fairies!'">
@@ -170,31 +172,65 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Function to generate a random outfit
-  function generateOutfit() {
+  function generateOutfit(inspirationStyle = null) {
     const tops = wardrobe.filter(item => item.category === 'Tops');
     const bottoms = wardrobe.filter(item => item.category === 'Bottoms');
     const accessories = wardrobe.filter(item => item.category === 'Accessories');
     const shoes = wardrobe.filter(item => item.category === 'Shoes');
 
-    const outfit = [
+    const userSizes = JSON.parse(localStorage.getItem('userSizes')) || {};
+    let outfit = [
       tops.length ? tops[Math.floor(Math.random() * tops.length)] : null,
       bottoms.length ? bottoms[Math.floor(Math.random() * bottoms.length)] : null,
       accessories.length ? accessories[Math.floor(Math.random() * accessories.length)] : null,
       shoes.length ? shoes[Math.floor(Math.random() * shoes.length)] : null
     ];
 
+    // Check size compatibility
+    if (userSizes.top && outfit[0]?.size && outfit[0].size !== userSizes.top) outfit[0] = null;
+    if (userSizes.bottom && outfit[1]?.size && outfit[1].size !== userSizes.bottom) outfit[1] = null;
+    if (userSizes.shoe && outfit[3]?.size && outfit[3].size !== userSizes.shoe) outfit[3] = null;
+
+    // Apply inspiration style if selected
+    if (inspirationStyle) {
+      if (inspirationStyle === 'bold' && shoes.length) {
+        outfit[3] = shoes.find(item => item.name.toLowerCase().includes('red') && (!userSizes.shoe || item.size === userSizes.shoe)) || outfit[3];
+      } else if (inspirationStyle === 'elegant' && tops.length) {
+        outfit[0] = tops.find(item => item.category === 'Tops' && item.name.toLowerCase().includes('dress') && (!userSizes.top || item.size === userSizes.top)) || outfit[0];
+      }
+    }
+
     displayGeneratedOutfit(outfit);
     if (outfit.some(item => !item)) {
-      alert('Not enough items in some categories to generate a complete outfit. Add more items!');
+      alert('Not enough compatible items in some categories. Add items in your size or update your size profile!');
     }
+  }
+
+  // Function to display inspiration gallery
+  function displayInspirationGallery() {
+    const inspirationItems = [
+      { url: 'https://via.placeholder.com/300x400?text=Bold+Look', style: 'bold' },
+      { url: 'https://via.placeholder.com/300x400?text=Elegant+Dress', style: 'elegant' },
+      { url: 'https://via.placeholder.com/300x400?text=Casual+Vibe', style: 'casual' }
+    ];
+    const inspirationDiv = document.getElementById('inspirationItems');
+    inspirationDiv.innerHTML = '';
+    inspirationItems.forEach(item => {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'bg-white p-2 rounded-lg shadow-md cursor-pointer hover:shadow-lg';
+      itemDiv.innerHTML = `<img src="${item.url}" alt="Inspiration" class="w-full h-48 object-cover rounded-md">`;
+      itemDiv.addEventListener('click', () => generateOutfit(item.style));
+      inspirationDiv.appendChild(itemDiv);
+    });
   }
 
   // Function to add a new item
   document.getElementById('addItem').addEventListener('click', async () => {
-    const name = document.getElementById('itemName').value.trim();
-    const url = document.getElementById('itemUrl').value.trim();
-    const category = document.getElementById('itemCategory').value;
+    const name = document.getElementById('itemName')?.value.trim();
+    const url = document.getElementById('itemUrl')?.value.trim();
+    const category = document.getElementById('itemCategory')?.value;
     const imageInput = document.getElementById('itemImage');
+    const itemSize = document.getElementById('itemSize')?.value.trim();
     const spinner = document.getElementById('loadingSpinner');
 
     if (!name || !url) {
@@ -202,56 +238,71 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    if (!imageInput) {
+      console.error('Image input element not found');
+      alert('Error: Image input field is missing.');
+      return;
+    }
+
     let imageUrl = '';
     if (imageInput.files && imageInput.files[0]) {
-      spinner.classList.remove('hidden'); // Show spinner
+      spinner.classList.remove('hidden');
       const reader = new FileReader();
 
       reader.onload = function(e) {
         try {
           imageUrl = e.target.result;
-          const newWardrobe = [...wardrobe, { name, url, category, image: imageUrl }];
+          const newWardrobe = [...wardrobe, { name, url, category, image: imageUrl, size: itemSize }];
           saveData(newWardrobe, favorites, savedOutfits);
           displayWardrobe(document.getElementById('filterCategory').value);
-          spinner.classList.add('hidden'); // Hide spinner
-          // Reset form
+          spinner.classList.add('hidden');
           document.getElementById('itemName').value = '';
           document.getElementById('itemUrl').value = '';
           document.getElementById('itemImage').value = '';
+          document.getElementById('itemSize').value = '';
           document.getElementById('urlImagePreview').classList.add('hidden');
         } catch (error) {
           console.error('Error adding item with image:', error);
-          spinner.classList.add('hidden'); // Hide spinner on error
+          spinner.classList.add('hidden');
           alert('Failed to add item. Storage may be full. Consider removing items or skipping images.');
         }
       };
 
       reader.onerror = function() {
         console.error('Error reading file with FileReader');
-        spinner.classList.add('hidden'); // Hide spinner on error
+        spinner.classList.add('hidden');
         alert('Error reading the image file. Please try again.');
       };
 
       reader.readAsDataURL(imageInput.files[0]);
     } else {
-      spinner.classList.remove('hidden'); // Show spinner
+      spinner.classList.remove('hidden');
       imageUrl = await fetchImageFromUrl(url);
       try {
-        const newWardrobe = [...wardrobe, { name, url, category, image: imageUrl }];
+        const newWardrobe = [...wardrobe, { name, url, category, image: imageUrl, size: itemSize }];
         saveData(newWardrobe, favorites, savedOutfits);
         displayWardrobe(document.getElementById('filterCategory').value);
-        spinner.classList.add('hidden'); // Hide spinner
-        // Reset form
+        spinner.classList.add('hidden');
         document.getElementById('itemName').value = '';
         document.getElementById('itemUrl').value = '';
         document.getElementById('itemImage').value = '';
+        document.getElementById('itemSize').value = '';
         document.getElementById('urlImagePreview').classList.add('hidden');
       } catch (error) {
         console.error('Error adding item without image:', error);
-        spinner.classList.add('hidden'); // Hide spinner on error
+        spinner.classList.add('hidden');
         alert('Failed to add item. Storage may be full.');
       }
     }
+  });
+
+  // Function to save user sizes
+  document.getElementById('saveUserSizes').addEventListener('click', () => {
+    const userTopSize = document.getElementById('userTopSize').value.trim();
+    const userBottomSize = document.getElementById('userBottomSize').value.trim();
+    const userShoeSize = document.getElementById('userShoeSize').value.trim();
+    localStorage.setItem('userSizes', JSON.stringify({ top: userTopSize, bottom: userBottomSize, shoe: userShoeSize }));
+    alert('Sizes saved successfully!');
   });
 
   // Function to remove an item
@@ -306,6 +357,28 @@ document.addEventListener('DOMContentLoaded', () => {
     saveData(wardrobe, favorites, savedOutfits);
     displaySavedOutfits();
   };
+
+  // Function to save built outfit
+  document.getElementById('saveBuiltOutfit').addEventListener('click', () => {
+    const builderCanvas = document.getElementById('builderCanvas');
+    const outfitItems = builderCanvas.querySelectorAll('.wardrobe-card');
+    const outfit = Array.from(outfitItems).map(item => {
+      const img = item.querySelector('img');
+      const name = item.querySelector('h3').textContent;
+      const category = item.querySelector('p').textContent;
+      return img ? { name, category, image: img.src } : null;
+    });
+    if (outfit.some(item => !item)) {
+      alert('Please add items to the builder to save!');
+      return;
+    }
+    savedOutfits.push(outfit);
+    saveData(wardrobe, favorites, savedOutfits);
+    displaySavedOutfits();
+    builderCanvas.innerHTML = '<p class="text-center text-gray-500">Drag items here to build your outfit!</p>';
+    document.getElementById('outfitBuilder').classList.add('hidden');
+    alert('Outfit saved successfully!');
+  });
 
   // Filter wardrobe by category
   document.getElementById('filterCategory').addEventListener('change', (e) => {
@@ -362,7 +435,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Generate outfit
-  document.getElementById('generateOutfit').addEventListener('click', generateOutfit);
+  document.getElementById('generateOutfit').addEventListener('click', () => {
+    generateOutfit();
+    document.getElementById('outfitBuilder').classList.add('hidden');
+  });
 
   // Dark mode toggle
   const darkModeToggle = document.getElementById('darkModeToggle');
@@ -383,8 +459,33 @@ document.addEventListener('DOMContentLoaded', () => {
       : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>';
   });
 
+  // Drag and Drop functionality
+  const builderCanvas = document.getElementById('builderCanvas');
+  builderCanvas.addEventListener('dragover', (e) => {
+    e.preventDefault();
+  });
+  builderCanvas.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const index = e.dataTransfer.getData('text/plain');
+    const item = wardrobe[index];
+    if (item) {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'bg-white p-4 rounded-lg shadow-md wardrobe-card';
+      itemDiv.innerHTML = `
+        <div class="image-container">
+          <img src="${item.image || 'https://via.placeholder.com/150?text=Clothing+Item'}" alt="${item.name}" class="w-full h-48 object-cover rounded-md mb-2">
+        </div>
+        <h3 class="text-lg font-semibold">${item.name}</h3>
+        <p class="text-sm text-gray-500">${item.category}</p>
+      `;
+      builderCanvas.appendChild(itemDiv);
+      document.getElementById('outfitBuilder').classList.remove('hidden');
+    }
+  });
+
   // Initial display
   displayWardrobe();
   displayFavorites();
   displaySavedOutfits();
+  displayInspirationGallery();
 });

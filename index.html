@@ -46,7 +46,30 @@
             <option value="Shoes">Shoes</option>
           </select>
         </div>
+        <div>
+          <label for="itemSize" class="block text-sm font-medium text-gray-700">Item Size (e.g., S, M, 8)</label>
+          <input type="text" id="itemSize" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2" placeholder="e.g., M">
+        </div>
         <button id="addItem" class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition">Add Item</button>
+      </div>
+      <!-- User Profile Section -->
+      <div class="mt-6">
+        <h3 class="text-lg font-semibold mb-2">Your Size Profile</h3>
+        <div class="space-y-2">
+          <div>
+            <label for="userTopSize" class="block text-sm font-medium text-gray-700">Top Size</label>
+            <input type="text" id="userTopSize" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2" placeholder="e.g., M">
+          </div>
+          <div>
+            <label for="userBottomSize" class="block text-sm font-medium text-gray-700">Bottom Size</label>
+            <input type="text" id="userBottomSize" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2" placeholder="e.g., 8">
+          </div>
+          <div>
+            <label for="userShoeSize" class="block text-sm font-medium text-gray-700">Shoe Size</label>
+            <input type="text" id="userShoeSize" class="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring-2" placeholder="e.g., 7">
+          </div>
+          <button id="saveUserSizes" class="mt-2 bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition">Save Sizes</button>
+        </div>
       </div>
     </div>
 
@@ -95,6 +118,21 @@
     <div id="savedOutfitsSection" class="mb-8 p-4 bg-white rounded-lg shadow-md hidden">
       <h2 class="text-xl font-semibold mb-4">Saved Outfits</h2>
       <div id="savedOutfits" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+    </div>
+
+    <!-- Outfit Inspiration Gallery -->
+    <div id="inspirationGallery" class="mb-8 p-4 bg-white rounded-lg shadow-md">
+      <h2 class="text-xl font-semibold mb-4">Outfit Inspiration</h2>
+      <div id="inspirationItems" class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
+    </div>
+
+    <!-- Outfit Builder -->
+    <div id="outfitBuilder" class="mb-8 p-4 bg-white rounded-lg shadow-md hidden">
+      <h2 class="text-xl font-semibold mb-4">Outfit Builder</h2>
+      <div id="builderCanvas" class="grid grid-cols-1 sm:grid-cols-2 gap-4 min-h-[200px] border-dashed border-2 border-gray-300 p-4">
+        <p class="text-center text-gray-500">Drag items here to build your outfit!</p>
+      </div>
+      <button id="saveBuiltOutfit" class="mt-4 bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition">Save Built Outfit</button>
     </div>
 
     <!-- Wardrobe Display -->

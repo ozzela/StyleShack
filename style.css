@@ -1,87 +1,129 @@
-/* Custom CSS for StyleShack */
+/* Custom CSS for StyleShack - Inspired by LTK */
 
-/* Custom header styling */
+/* General Layout and Background */
+body {
+  font-family: 'Arial', sans-serif; /* Clean sans-serif like LTK */
+  background-color: #f8f8f8; /* Soft neutral background */
+  color: #333333; /* Dark gray for text */
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px; /* LTK-like constrained width */
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header Styling */
 h1 {
-  color: #000000; /* Black text for contrast */
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #000000; /* Bold black for luxury feel */
+  text-align: center;
+  margin-bottom: 1.5rem;
   letter-spacing: 1px;
 }
 
-/* Subtitle styling */
 p.text-center {
-  color: #666666; /* Dark gray for contrast */
+  font-size: 1.1rem;
+  color: #666666; /* Subtle gray for subtitle */
+  text-align: center;
+  margin-bottom: 2rem;
   font-style: italic;
 }
 
-/* Form container styling (clean white background) */
+/* Form Container (LTK Shop Form Style) */
 .max-w-md.mx-auto.bg-white {
   background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-radius: 12px; /* Rounded corners like LTK cards */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  padding: 24px;
   transition: transform 0.3s ease;
 }
 
 .max-w-md.mx-auto.bg-white:hover {
-  transform: translateY(-3px);
+  transform: translateY(-5px); /* Lift effect on hover */
 }
 
-/* Input fields */
+/* Input Fields */
 input[type="text"],
 input[type="url"],
-input[type="file"] {
-  border-color: #e0e0e0;
+input[type="file"],
+select {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 10px;
+  width: 100%;
+  font-size: 1rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 input[type="text"]:focus,
 input[type="url"]:focus,
-input[type="file"]:focus {
+input[type="file"]:focus,
+select:focus {
   border-color: #000000;
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  outline: none;
 }
 
-/* Custom button styling to override Tailwind colors */
-button {
-  background: #000000 !important; /* Black for buttons */
-  border: none;
+label {
   font-weight: 500;
-  transition: background 0.3s ease, transform 0.2s ease;
-  color: white !important; /* Ensure text is visible */
+  color: #444444;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Buttons (LTK Shop Button Style) */
+button {
+  background-color: #000000; /* Black for elegance */
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
-  background: #333333 !important; /* Darker shade for hover */
+  background-color: #333333; /* Darker black on hover */
   transform: scale(1.05);
 }
 
-/* Wardrobe card styling (LTK-like) */
+/* Wardrobe Card (LTK Product Tile Style) */
 .wardrobe-card {
-  background-color: #ffffff; /* Pure white background */
-  border: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  padding: 16px;
-  border-radius: 8px;
 }
 
 .wardrobe-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .image-container {
+  position: relative;
   overflow: hidden;
-  border-radius: 8px;
 }
 
-img.w-full.h-48 {
-  border: none;
+.image-container img {
+  width: 100%;
+  height: 200px; /* Consistent height like LTK images */
+  object-fit: cover;
   transition: transform 0.3s ease;
 }
 
-img.w-full.h-48:hover {
+.image-container img:hover {
   transform: scale(1.1);
 }
 
-/* Delete button styling */
+/* Delete and Favorite Buttons */
 button.text-red-500 {
   background: none;
   color: #e53e3e;
@@ -89,131 +131,182 @@ button.text-red-500 {
 }
 
 button.text-red-500:hover {
-  background: none;
   color: #c53030;
 }
 
-/* Favorite button styling */
 .favorite-btn {
   position: absolute;
-  top: 8px;
-  left: 8px;
-  background: none;
-  border: none;
+  top: 10px;
+  left: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #000000;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .favorite-btn.favorited {
-  color: #e53e3e;
+  background-color: #e53e3e;
+  color: #ffffff;
 }
 
-/* Link styling */
+.favorite-btn:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+}
+
+/* Links */
 a.text-blue-500 {
-  color: #000000; /* Black link color */
+  color: #000000;
+  text-decoration: none;
+  font-weight: 500;
   transition: color 0.2s ease;
 }
 
 a.text-blue-500:hover {
-  color: #666666; /* Dark gray on hover */
-}
-
-/* Filter dropdown styling */
-select#filterCategory {
-  background: #000000;
-  color: white;
-  font-weight: 500;
-  transition: background 0.3s ease;
-}
-
-select#filterCategory:hover {
-  background: #333333;
-}
-
-/* Category dropdown in form */
-select#itemCategory {
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-select#itemCategory:focus {
-  border-color: #000000;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
-}
-
-/* Category text in wardrobe items */
-p.text-gray-500 {
   color: #666666;
 }
 
-/* Saved Outfits styling */
-#savedOutfitsSection .wardrobe-card {
+/* Filter Dropdown */
+select#filterCategory {
+  background-color: #000000;
+  color: #ffffff;
+  border-radius: 6px;
+  padding: 10px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+select#filterCategory:hover {
+  background-color: #333333;
+}
+
+/* Generated Outfit, Favorites, Saved Outfits */
+#generatedOutfit,
+#favorites,
+#savedOutfitsSection,
+#inspirationGallery,
+#outfitBuilder {
   background-color: #ffffff;
-  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 2rem;
 }
 
-#savedOutfitsSection .wardrobe-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+#outfitItems,
+#favoriteItems,
+#savedOutfits,
+#inspirationItems,
+#builderCanvas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px; /* LTK-like spacing */
 }
 
-#savedOutfitsSection img.w-full.h-24 {
-  border: none;
-  transition: transform 0.3s ease;
+/* Inspiration Gallery */
+#inspirationGallery .wardrobe-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
-#savedOutfitsSection img.w-full.h-24:hover {
-  transform: scale(1.1);
+/* Outfit Builder */
+#builderCanvas {
+  border: 2px dashed #e0e0e0;
+  min-height: 250px;
+  transition: border-color 0.3s ease;
 }
 
-/* Dark mode styles */
+#builderCanvas:hover {
+  border-color: #000000;
+}
+
+#builderCanvas .wardrobe-card {
+  margin: 10px;
+}
+
+/* Spinner */
+#loadingSpinner svg {
+  color: #000000;
+}
+
+/* Footer */
+footer {
+  background-color: #ffffff;
+  border-top: 1px solid #e0e0e0;
+  padding: 1rem 0;
+  margin-top: 2rem;
+}
+
+footer p {
+  color: #666666;
+  font-size: 0.9rem;
+}
+
+/* Dark Mode (LTK-like dark theme) */
 body.dark-mode {
-  background-color: #1a202c; /* Dark gray for dark mode */
+  background-color: #1a1a1a; /* Dark background */
+  color: #e0e0e0;
 }
 
-body.dark-mode h1,
+body.dark-mode h1 {
+  color: #ffffff;
+}
+
 body.dark-mode p.text-center {
-  color: #e2e8f0; /* Light gray for better contrast */
+  color: #cccccc;
 }
 
 body.dark-mode .max-w-md.mx-auto.bg-white {
-  background-color: #2d3748;
-  border: 1px solid #4a5568;
+  background-color: #2d2d2d;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 body.dark-mode .wardrobe-card {
-  background-color: #2d3748;
-  border: 1px solid #4a5568;
+  background-color: #2d2d2d;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-body.dark-mode #savedOutfitsSection .wardrobe-card {
-  background-color: #2d3748;
-  border: 1px solid #4a5568;
+body.dark-mode input[type="text"],
+body.dark-mode input[type="url"],
+body.dark-mode input[type="file"],
+body.dark-mode select {
+  background-color: #3d3d3d;
+  border-color: #4a4a4a;
+  color: #ffffff;
+}
+
+body.dark-mode input[type="text"]:focus,
+body.dark-mode input[type="url"]:focus,
+body.dark-mode input[type="file"]:focus,
+body.dark-mode select:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
 }
 
 body.dark-mode button {
-  background: #000000;
+  background-color: #ffffff;
+  color: #000000;
 }
 
 body.dark-mode button:hover {
-  background: #333333;
-}
-
-body.dark-mode button.text-red-500 {
-  background: none;
-}
-
-body.dark-mode button.text-red-500:hover {
-  background: none;
+  background-color: #cccccc;
 }
 
 body.dark-mode .favorite-btn {
+  background: rgba(45, 45, 45, 0.8);
   color: #ffffff;
 }
 
 body.dark-mode .favorite-btn.favorited {
-  color: #e53e3e;
+  background-color: #e53e3e;
+  color: #ffffff;
 }
 
 body.dark-mode a.text-blue-500 {
@@ -224,29 +317,15 @@ body.dark-mode a.text-blue-500:hover {
   color: #cccccc;
 }
 
-/* Spinner styling */
-#loadingSpinner svg {
-  color: #000000;
-}
-
 body.dark-mode #loadingSpinner svg {
   color: #ffffff;
 }
 
-/* Footer styling */
-footer {
-  background: rgba(255, 255, 255, 0.8);
-  border-top: 1px solid #e2e8f0;
-}
-
-footer p {
-  color: #666666;
-}
-
 body.dark-mode footer {
-  background: rgba(0, 0, 0, 0.5);
+  background-color: #2d2d2d;
+  border-top: 1px solid #4a4a4a;
 }
 
 body.dark-mode footer p {
-  color: #e2e8f0;
+  color: #cccccc;
 }

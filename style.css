@@ -1,26 +1,27 @@
 /* Custom CSS for StyleShack - Inspired by LTK */
 
-/* General Layout and Background */
+/* General */
 body {
-  font-family: 'Arial', sans-serif; /* Clean sans-serif like LTK */
-  background-color: #f8f8f8; /* Soft neutral background */
-  color: #333333; /* Dark gray for text */
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f8f8;
+  color: #333333;
   line-height: 1.6;
   margin: 0;
   padding: 0;
 }
 
 .container {
-  max-width: 1200px; /* LTK-like constrained width */
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  position: relative;
 }
 
 /* Header Styling */
 h1 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #000000; /* Bold black for luxury feel */
+  color: #000000;
   text-align: center;
   margin-bottom: 1.5rem;
   letter-spacing: 1px;
@@ -28,26 +29,82 @@ h1 {
 
 p.text-center {
   font-size: 1.1rem;
-  color: #666666; /* Subtle gray for subtitle */
+  color: #666666;
   text-align: center;
   margin-bottom: 2rem;
   font-style: italic;
 }
 
-/* Form Container (LTK Shop Form Style) */
-.max-w-md.mx-auto.bg-white {
+/* Size Profile (Positioned in Bottom-Left Corner, Smaller) */
+.size-profile {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
   background-color: #ffffff;
-  border-radius: 12px; /* Rounded corners like LTK cards */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 12px;
+  width: 200px;
+  transition: transform 0.3s ease;
+}
+
+.size-profile:hover {
+  transform: translateY(-5px);
+}
+
+.size-profile h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 0.5rem;
+}
+
+.size-profile input[type="text"] {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 6px;
+  width: 100%;
+  font-size: 0.85rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.size-profile input[type="text"]:focus {
+  border-color: #000000;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+
+.size-profile button {
+  width: 100%;
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.size-profile button:hover {
+  background-color: #333333;
+  transform: scale(1.05);
+}
+
+/* Form Container */
+.max-w-md.mx-auto {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 24px;
   transition: transform 0.3s ease;
 }
 
-.max-w-md.mx-auto.bg-white:hover {
-  transform: translateY(-5px); /* Lift effect on hover */
+.max-w-md.mx-auto:hover {
+  transform: translateY(-5px);
 }
 
-/* Input Fields */
+/* Input fields */
 input[type="text"],
 input[type="url"],
 input[type="file"],
@@ -76,9 +133,9 @@ label {
   display: block;
 }
 
-/* Buttons (LTK Shop Button Style) */
+/* Buttons */
 button {
-  background-color: #000000; /* Black for elegance */
+  background-color: #000000;
   color: #ffffff;
   border: none;
   border-radius: 6px;
@@ -89,11 +146,11 @@ button {
 }
 
 button:hover {
-  background-color: #333333; /* Darker black on hover */
+  background-color: #333333;
   transform: scale(1.05);
 }
 
-/* Wardrobe Card (LTK Product Tile Style) */
+/* Wardrobe Card */
 .wardrobe-card {
   background-color: #ffffff;
   border-radius: 12px;
@@ -114,7 +171,7 @@ button:hover {
 
 .image-container img {
   width: 100%;
-  height: 200px; /* Consistent height like LTK images */
+  height: 200px;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
@@ -207,13 +264,23 @@ select#filterCategory:hover {
 #builderCanvas {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px; /* LTK-like spacing */
+  gap: 20px;
 }
 
 /* Inspiration Gallery */
 #inspirationGallery .wardrobe-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+#inspirationItems {
+  display: flex;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+#inspirationItems .wardrobe-card {
+  width: 200px;
 }
 
 /* Outfit Builder */
@@ -249,9 +316,9 @@ footer p {
   font-size: 0.9rem;
 }
 
-/* Dark Mode (LTK-like dark theme) */
+/* Dark Mode */
 body.dark-mode {
-  background-color: #1a1a1a; /* Dark background */
+  background-color: #1a1a1a;
   color: #e0e0e0;
 }
 
@@ -263,7 +330,36 @@ body.dark-mode p.text-center {
   color: #cccccc;
 }
 
-body.dark-mode .max-w-md.mx-auto.bg-white {
+body.dark-mode .size-profile {
+  background-color: #2d2d2d;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .size-profile h3 {
+  color: #ffffff;
+}
+
+body.dark-mode .size-profile input[type="text"] {
+  background-color: #3d3d3d;
+  border-color: #4a4a4a;
+  color: #ffffff;
+}
+
+body.dark-mode .size-profile input[type="text"]:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .size-profile button {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+body.dark-mode .size-profile button:hover {
+  background-color: #cccccc;
+}
+
+body.dark-mode .max-w-md.mx-auto {
   background-color: #2d2d2d;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }

@@ -35,7 +35,7 @@ p.text-center {
   font-style: italic;
 }
 
-/* Size Profile (Positioned in Bottom-Left Corner, Smaller) */
+/* Size Profile (Bottom-Left Corner, Smaller) */
 .size-profile {
   position: absolute;
   bottom: 20px;

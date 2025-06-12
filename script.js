@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Function to generate a random outfit
-  function generateOutfit(inspirationStyle = null) {
+  function generateOutfit() {
     const tops = wardrobe.filter(item => item.category === 'Tops');
     const bottoms = wardrobe.filter(item => item.category === 'Bottoms');
     const accessories = wardrobe.filter(item => item.category === 'Accessories');
@@ -189,58 +189,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (userSizes.bottom && outfit[1]?.size && outfit[1].size !== userSizes.bottom) outfit[1] = null;
     if (userSizes.shoe && outfit[3]?.size && outfit[3].size !== userSizes.shoe) outfit[3] = null;
 
-    // Apply inspiration style if selected
-    if (inspirationStyle) {
-      if (inspirationStyle === 'bold' && shoes.length) {
-        outfit[3] = shoes.find(item => item.name.toLowerCase().includes('red') && (!userSizes.shoe || item.size === userSizes.shoe)) || outfit[3];
-      } else if (inspirationStyle === 'elegant' && tops.length) {
-        outfit[0] = tops.find(item => item.category === 'Tops' && item.name.toLowerCase().includes('dress') && (!userSizes.top || item.size === userSizes.top)) || outfit[0];
-      } else if (inspirationStyle === 'bohemian' && tops.length) {
-        outfit[0] = tops.find(item => item.name.toLowerCase().includes('dress') && (!userSizes.top || item.size === userSizes.top)) || outfit[0];
-      } else if (inspirationStyle === 'sporty' && bottoms.length) {
-        outfit[1] = bottoms.find(item => item.name.toLowerCase().includes('leggings') && (!userSizes.bottom || item.size === userSizes.bottom)) || outfit[1];
-      } else if (inspirationStyle === 'trendy' && accessories.length) {
-        outfit[2] = accessories.find(item => item.name.toLowerCase().includes('modern') || item.name.toLowerCase().includes('sleek') && (!userSizes.accessory || item.size === userSizes.accessory)) || outfit[2];
-      }
-    }
-
     displayGeneratedOutfit(outfit);
     if (outfit.some(item => !item)) {
       alert('Not enough compatible items in some categories. Add items in your size or update your size profile!');
     }
-  }
-
-  // Function to display inspiration gallery
-  function displayInspirationGallery(currentIndex = 0) {
-    const inspirationItems = [
-      { url: 'https://via.placeholder.com/300x400?text=Bold+Look', style: 'bold', description: 'Make a statement with vibrant colors like red boots and daring accessories!' },
-      { url: 'https://via.placeholder.com/300x400?text=Elegant+Dress', style: 'elegant', description: 'Perfect for a night out, featuring dresses and sophisticated shoes.' },
-      { url: 'https://via.placeholder.com/300x400?text=Casual+Vibe', style: 'casual', description: 'Laid-back and comfy, ideal for everyday wear with tops and sneakers.' },
-      { url: 'https://via.placeholder.com/300x400?text=Bohemian+Chic', style: 'bohemian', description: 'Flowy dresses and earthy tones for a free-spirited look.' },
-      { url: 'https://via.placeholder.com/300x400?text=Sporty+Style', style: 'sporty', description: 'Activewear for gym days or casual outings, with sneakers and leggings.' },
-      { url: 'https://via.placeholder.com/300x400?text=Trendy+Style', style: 'trendy', description: 'A modern look with sleek accessories!' }
-    ];
-    const inspirationDiv = document.getElementById('inspirationItems');
-    const descriptionDiv = document.getElementById('inspirationDescription');
-    inspirationDiv.innerHTML = '';
-
-    const item = inspirationItems[currentIndex];
-    const itemDiv = document.createElement('div');
-    itemDiv.className = 'bg-white p-2 rounded-lg shadow-md cursor-pointer hover:shadow-lg mx-auto';
-    itemDiv.innerHTML = `<img src="${item.url}" alt="${item.style}" class="w-full h-48 object-cover rounded-md">`;
-    itemDiv.addEventListener('click', () => generateOutfit(item.style));
-    inspirationDiv.appendChild(itemDiv);
-    descriptionDiv.textContent = item.description;
-
-    // Navigation logic
-    document.getElementById('prevInspiration').addEventListener('click', () => {
-      const newIndex = (currentIndex - 1 + inspirationItems.length) % inspirationItems.length;
-      displayInspirationGallery(newIndex);
-    });
-    document.getElementById('nextInspiration').addEventListener('click', () => {
-      const newIndex = (currentIndex + 1) % inspirationItems.length;
-      displayInspirationGallery(newIndex);
-    });
   }
 
   // Function to add a new item
@@ -482,5 +434,4 @@ document.addEventListener('DOMContentLoaded', () => {
   displayWardrobe();
   displayFavorites();
   displaySavedOutfits();
-  displayInspirationGallery(0);
 });
